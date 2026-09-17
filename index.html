@@ -398,7 +398,7 @@ footer p{margin:6px 0;color:var(--plum-2)}
       <span class="wob">정</span><span class="wob">희</span><span class="wob">주</span>
       <span class="wob">도</span><span class="wob">감</span>
     </h1>
-    <p class="hero-sub">가보자가보자 — 밥 묵자 묵어어어~ 🍚</p>
+    <p class="hero-sub" id="heroSub">가보자가보자 — 밥 묵자 묵어어어~ 🍚</p>
     <p class="typer" id="typer" aria-live="polite"></p>
     <button class="hero-fish" id="heroFish" type="button" aria-label="물고기 쓰다듬기">🐟</button>
     <p class="fish-hint" id="fishHint">물고기를 다섯 번 누르면 뭔가 터집니다</p>
@@ -426,7 +426,7 @@ footer p{margin:6px 0;color:var(--plum-2)}
       <div class="fact-actions">
         <button class="btn" id="factBtn" type="button">✨ 사실 하나 뽑기</button>
         <button class="btn ghost" id="factCopy" type="button">📋 복사하기</button>
-        <button class="btn ghost" id="factAll" type="button">📜 스무 개 전부 보기</button>
+        <button class="btn ghost" id="factAll" type="button">📜 전부 보기</button>
       </div>
       <ol class="mini" id="factList" hidden style="text-align:left;line-height:2;margin:0;padding-left:1.4em"></ol>
     </div>
@@ -457,7 +457,7 @@ footer p{margin:6px 0;color:var(--plum-2)}
   <section class="sec reveal" id="bless" aria-labelledby="bless-title">
     <p class="eyebrow">PROTOCOL · 블레스유</p>
     <h2 id="bless-title">🤧 블레스유 프로토콜</h2>
-    <p class="sec-lead">재채기하고 나서 블레스유 안 해주면 서운합니다. 서운하지 않게, 여기서 미리 연습하고 가세요.</p>
+    <p class="sec-lead" id="blessLead">재채기하고 나서 블레스유 안 해주면 서운합니다. 서운하지 않게, 여기서 미리 연습하고 가세요.</p>
     <div class="card bless">
       <div class="sneeze-stage" id="sneezeStage">
         <p class="achoo" id="achoo">…</p>
@@ -499,7 +499,7 @@ footer p{margin:6px 0;color:var(--plum-2)}
     <p class="eyebrow">DIARY · 나 희준데~</p>
     <h2 id="diary-title">📓 희주 일지</h2>
     <p class="sec-lead">작성자: 정희주 본인 · 신뢰도 100%</p>
-    <ul class="diary">
+    <ul class="diary" id="diaryList">
       <li><span class="ic">🍱</span><p>오늘 너무 배고파서 점심 두 그릇 먹을 거다.<span class="src">본인 진술</span></p></li>
       <li><span class="ic">😴</span><p>꿈나라 좀 다녀온다.<span class="src">본인 진술</span></p></li>
       <li><span class="ic">🤷</span><p>그냥 그렇다고.<span class="src">본인 진술</span></p></li>
@@ -508,21 +508,21 @@ footer p{margin:6px 0;color:var(--plum-2)}
       <li><span class="ic">🌊</span><p>어제는 한강이 내 길을 막아서 가뿐히 뛰어넘었다.<span class="src">지리 정보</span></p></li>
       <li><span class="ic">🚶</span><p>물 위도 걸을 수 있더라.<span class="src">물리 법칙 갱신</span></p></li>
     </ul>
-    <p class="witness">[목격담] 실제로 어제 자전거 타고 한강 감. — 찐희주 인증 ✅</p>
+    <p class="witness" id="witness">[목격담] 실제로 어제 자전거 타고 한강 감. — 찐희주 인증 ✅</p>
   </section>
 
   <!-- ══ 사건 기록 ═════════════════════════════════════ -->
   <section class="sec reveal" id="incident" aria-labelledby="incident-title">
     <p class="eyebrow">INCIDENT · 사건 기록</p>
     <h2 id="incident-title">🌿 브랜치 사건, 그리고 상납 협상</h2>
-    <p class="sec-lead">브런치를 뿌수려다 브랜치를 뿌순 날의 기록입니다.</p>
+    <p class="sec-lead" id="branchLead">브런치를 뿌수려다 브랜치를 뿌순 날의 기록입니다.</p>
     <div class="card" style="display:grid;gap:26px">
-      <ul class="chat">
+      <ul class="chat" id="branchChat">
         <li data-side="me"><span class="who">정희주</span><span class="bub">브런치 뿌수려다가… 브랜치인가? 뿌숴버렸다.</span></li>
         <li data-tone="warn"><span class="who">민코딩 강사님</span><span class="bub">master breaker?!</span></li>
         <li data-side="me"><span class="who">정희주</span><span class="bub">저 master는 안 건들었습니다… 😅</span></li>
       </ul>
-      <ul class="chat">
+      <ul class="chat" id="tributeChat">
         <li><span class="who">희주 동생</span><span class="bub">누나한테 매달 치킨 한 마리씩 상납한다.</span></li>
         <li data-side="me"><span class="who">정희주</span><span class="bub">동생아 반말하지 마라. 그리고 앞으로는 사이드로 감튀 추가로 받는다. 🍟</span></li>
       </ul>
@@ -771,7 +771,8 @@ footer p{margin:6px 0;color:var(--plum-2)}
     } else { toast("이 브라우저에선 복사가 안 돼요 😢"); }
   });
 
-  var factList = $("factList"), listOpen = false;
+  var factList = $("factList"), factAll = $("factAll"), listOpen = false;
+
   function fillFactList() {
     factList.innerHTML = "";
     FACTS.forEach(function (f) {
@@ -780,17 +781,17 @@ footer p{margin:6px 0;color:var(--plum-2)}
       factList.appendChild(li);
     });
   }
-  $("factAll").addEventListener("click", function () {
-    if (!factList.childElementCount) {
-      FACTS.forEach(function (f) {
-        var li = document.createElement("li");
-        li.textContent = f;
-        factList.appendChild(li);
-      });
-    }
+  /* 개수는 README를 읽고 나면 달라지므로 라벨에 박아두지 않는다 */
+  function paintFactAll() {
+    factAll.textContent = listOpen ? "🙈 접기" : "📜 " + FACTS.length + "개 전부 보기";
+  }
+  paintFactAll();
+
+  factAll.addEventListener("click", function () {
+    if (!factList.childElementCount) fillFactList();
     listOpen = !listOpen;
     factList.hidden = !listOpen;
-    this.textContent = listOpen ? "🙈 접기" : "📜 스무 개 전부 보기";
+    paintFactAll();
   });
 
   /* ── 밥 묵자 룰렛 ─────────────────────────────────── */
@@ -845,7 +846,7 @@ footer p{margin:6px 0;color:var(--plum-2)}
   var ACHOO = ["에에에취!!", "엣취!", "에--취!!", "에취취취!", "흡… 에취!"];
   var blessCount = store.get("bless", 0);
   var blessEl = $("blessCount"), achoo = $("achoo"), stage = $("sneezeStage");
-  var replies = document.querySelectorAll("#blessReplies li");
+  function blessChips() { return document.querySelectorAll("#blessReplies li"); }
 
   function paintBless() {
     blessEl.innerHTML = blessCount + "<small>누적 블레스유</small>";
@@ -861,8 +862,9 @@ footer p{margin:6px 0;color:var(--plum-2)}
     void stage.offsetWidth;
     stage.classList.add("shake");
 
-    Array.prototype.forEach.call(replies, function (li) { li.classList.remove("on"); });
-    Array.prototype.forEach.call(replies, function (li, i) {
+    var chips = blessChips();
+    Array.prototype.forEach.call(chips, function (li) { li.classList.remove("on"); });
+    Array.prototype.forEach.call(chips, function (li, i) {
       setTimeout(function () { li.classList.add("on"); }, 420 + i * 320);
     });
 
@@ -987,9 +989,35 @@ footer p{margin:6px 0;color:var(--plum-2)}
   });
 
   /* ── README.md 동기화 ─────────────────────────────────
-     같은 폴더의 README.md를 읽어 「정희주에 관한 사실」과
-     「다녀간 사람들」 표를 그대로 반영한다. 표에 한 줄 추가하면
-     페이지가 따라온다. 못 읽으면(file:// 등) 위의 폴백을 쓴다. */
+     README.md 한 장이 이 페이지의 원본이다. 아래 섹션은 전부
+     README를 파싱해 다시 그린다 — 표제 인사말, 희주 일지,
+     상납 시스템, 브랜치 사건, 블레스유 프로토콜, 정희주에 관한
+     사실, 다녀간 사람들. README를 못 읽거나 해당 섹션을 못 찾으면
+     HTML에 적어둔 내용을 그대로 둔다. */
+
+  function esc(t) {
+    return String(t).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+  /* README에서 쓰는 최소한의 인라인 문법만 옮긴다 */
+  function inline(t) {
+    return esc(t)
+      .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+      .replace(/`(.+?)`/g, "<code>$1</code>");
+  }
+  function splitIcon(t, fallback) {
+    var chars = Array.from(t), icon = fallback;
+    try {
+      if (chars.length && /\p{Extended_Pictographic}/u.test(chars[0])) {
+        icon = chars.shift();
+        while (chars[0] && /[️‍]/.test(chars[0])) icon += chars.shift();
+      }
+    } catch (e) {}
+    return { icon: icon, text: chars.join("").trim() };
+  }
+
+  /* 헤딩으로 잘라낸 한 섹션의 본문 줄들 */
   function sectionOf(md, heading) {
     var lines = md.split(/\r?\n/), out = [], on = false;
     for (var i = 0; i < lines.length; i++) {
@@ -1002,6 +1030,19 @@ footer p{margin:6px 0;color:var(--plum-2)}
       if (on) out.push(line);
     }
     return out;
+  }
+  function bulletsOf(lines) {
+    return lines.filter(function (l) { return /^\s*[-*]\s+/.test(l); })
+                .map(function (l) { return l.replace(/^\s*[-*]\s+/, "").trim(); });
+  }
+  function quotesOf(lines) {
+    return lines.filter(function (l) { return /^\s*>/.test(l); })
+                .map(function (l) { return l.replace(/^\s*>\s?/, "").trim(); })
+                .filter(function (l) { return l && !/^\*?작성자/.test(l); });
+  }
+  function parasOf(lines) {
+    return lines.map(function (l) { return l.trim(); })
+                .filter(function (l) { return l && !/^([->*|#]|\d+\.)/.test(l); });
   }
 
   function parseFacts(md) {
@@ -1029,6 +1070,100 @@ footer p{margin:6px 0;color:var(--plum-2)}
       });
   }
 
+  /* 표제 인사말 — 문서 첫 인용문 */
+  function renderHero(md) {
+    var first = md.split(/\r?\n/).filter(function (l) { return /^\s*>/.test(l); })[0];
+    var el = $("heroSub");
+    if (!el || !first) return 0;
+    el.textContent = first.replace(/^\s*>\s?/, "").trim();
+    return 1;
+  }
+
+  /* 희주 일지 — 글머리 하나가 카드 하나 */
+  function renderDiary(md) {
+    var lines = sectionOf(md, "나 희준데");
+    var items = bulletsOf(lines), list = $("diaryList");
+    if (!list || !items.length) return 0;
+    list.innerHTML = "";
+    items.forEach(function (raw) {
+      var part = splitIcon(raw, "🐟");
+      var li = document.createElement("li");
+      li.innerHTML = '<span class="ic">' + esc(part.icon) + '</span><p>' + inline(part.text) + "</p>";
+      list.appendChild(li);
+    });
+    var wit = quotesOf(lines).filter(function (q) { return /목격담|인증/.test(q); })[0];
+    var witEl = $("witness");
+    if (witEl && wit) witEl.innerHTML = inline(wit);
+    return items.length;
+  }
+
+  function bubble(who, text, mine, tone) {
+    var li = document.createElement("li");
+    if (mine) li.setAttribute("data-side", "me");
+    if (tone) li.setAttribute("data-tone", tone);
+    li.innerHTML = '<span class="who">' + esc(who) + '</span><span class="bub">' + inline(text) + "</span>";
+    return li;
+  }
+
+  /* 상납 시스템 — 글머리는 동생 말, 인용문은 희주 답 */
+  function renderTribute(md) {
+    var lines = sectionOf(md, "상납 시스템");
+    var says = bulletsOf(lines), replies = quotesOf(lines), chat = $("tributeChat");
+    if (!chat || (!says.length && !replies.length)) return 0;
+    chat.innerHTML = "";
+    says.forEach(function (t) { chat.appendChild(bubble("희주 동생", t, false)); });
+    replies.forEach(function (t) { chat.appendChild(bubble("정희주", t, true)); });
+    return says.length + replies.length;
+  }
+
+  /* 브랜치 사건 — 본문은 희주, **[이름]** 다음 줄은 그 사람 말,
+     ㄴ 로 시작하면 희주의 대답 */
+  function renderBranch(md) {
+    var lines = sectionOf(md, "브랜치 사건"), chat = $("branchChat");
+    if (!chat) return 0;
+    var out = [], speaker = "";
+    parasOf(lines).forEach(function (t) { out.push(bubble("정희주", t, true)); });
+    quotesOf(lines).forEach(function (q) {
+      var head = q.match(/^\*\*\[(.+?)\]\*\*\s*$/);
+      if (head) { speaker = head[1]; return; }
+      if (/^ㄴ/.test(q)) { out.push(bubble("정희주", q.replace(/^ㄴ\s*/, ""), true)); return; }
+      out.push(bubble(speaker || "누군가", q, false, "warn"));
+      speaker = "";
+    });
+    if (!out.length) return 0;
+    chat.innerHTML = "";
+    out.forEach(function (li) { chat.appendChild(li); });
+    return out.length;
+  }
+
+  /* 블레스유 — ㄴ **이름:** 대사 를 응답 칩으로 */
+  function renderBless(md) {
+    var lines = sectionOf(md, "블레스유"), list = $("blessReplies");
+    if (!list) return 0;
+    var lead = parasOf(lines)[0], leadEl = $("blessLead");
+    if (leadEl && lead) leadEl.textContent = lead + " 서운하지 않게, 여기서 미리 연습하고 가세요.";
+
+    var faces = ["🧔", "🙋", "👩", "🧑", "👨", "🙆"];
+    var items = quotesOf(lines).map(function (q) {
+      var m = q.match(/^ㄴ\s*\*\*(.+?)\*\*:?\s*(.*)$/);
+      return m ? { who: m[1].replace(/:\s*$/, ""), say: m[2].replace(/\.$/, "") } : null;
+    }).filter(Boolean);
+    if (!items.length) return 0;
+
+    list.innerHTML = "";
+    items.forEach(function (it, i) {
+      var li = document.createElement("li");
+      li.setAttribute("data-reply", String(i));
+      li.innerHTML = faces[i % faces.length] + " <b>" + esc(it.who) + "</b> — " + esc(it.say);
+      list.appendChild(li);
+    });
+    var you = document.createElement("li");
+    you.setAttribute("data-reply", String(items.length));
+    you.innerHTML = "🫵 <b>당신</b> — Bless you! 🙏";
+    list.appendChild(you);
+    return items.length;
+  }
+
   /* 같은 폴더 → GitHub raw 순으로 시도한다.
      GitHub Pages는 Jekyll이 README.md를 가져가 버려서 404가 나는 경우가 있고
      (.nojekyll 파일로 막아두지만), 파일을 직접 열면 fetch 자체가 막힌다.
@@ -1039,25 +1174,31 @@ footer p{margin:6px 0;color:var(--plum-2)}
   ];
 
   function applyReadme(md, label) {
-    var facts = parseFacts(md);
-    var guests = parseGuests(md);
-    /* 표도 목록도 못 찾았으면 README가 아니다(404 페이지 등) → 다음 소스로 */
-    if (!guests.length && !facts.length) throw new Error("README 형식이 아님");
+    var facts = parseFacts(md), guests = parseGuests(md);
+    /* 표도 번호 목록도 못 찾았으면 README가 아니다(404 페이지 등) → 다음 소스로 */
+    if (!facts.length && !guests.length) throw new Error("README 형식이 아님");
 
     if (facts.length) {
       FACTS.length = 0;
       Array.prototype.push.apply(FACTS, facts);
       if (factList.childElementCount) fillFactList();
+      paintFactAll();
     }
     if (guests.length) {
       SEED.length = 0;
       Array.prototype.push.apply(SEED, guests);
       renderNotes();
     }
+    var diary = renderDiary(md);
+    renderHero(md);
+    renderTribute(md);
+    renderBranch(md);
+    renderBless(md);
+
     var src = $("guestSrc");
     if (src) {
-      src.textContent = "README의 「다녀간 사람들」 " + guests.length + "명을 그대로 불러왔습니다 · 사실 "
-        + FACTS.length + "개" + label;
+      src.textContent = "README에서 불러왔습니다 · 사실 " + FACTS.length + "개 · 방명록 "
+        + guests.length + "명 · 일지 " + diary + "줄" + label;
     }
   }
 
