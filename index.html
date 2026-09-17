@@ -1029,28 +1029,50 @@ footer p{margin:6px 0;color:var(--plum-2)}
       });
   }
 
-  fetch("README.md", { cache: "no-cache" })
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
-    .then(function (md) {
-      var facts = parseFacts(md);
-      if (facts.length) {
-        FACTS.length = 0;
-        Array.prototype.push.apply(FACTS, facts);
-        if (factList.childElementCount) fillFactList();
-      }
-      var guests = parseGuests(md);
-      if (guests.length) {
-        SEED.length = 0;
-        Array.prototype.push.apply(SEED, guests);
-        renderNotes();
-      }
+  /* 같은 폴더 → GitHub raw 순으로 시도한다.
+     GitHub Pages는 Jekyll이 README.md를 가져가 버려서 404가 나는 경우가 있고
+     (.nojekyll 파일로 막아두지만), 파일을 직접 열면 fetch 자체가 막힌다.
+     raw.githubusercontent.com은 CORS가 열려 있어 어느 쪽에서도 읽힌다. */
+  var README_SOURCES = [
+    { url: "README.md", label: "" },
+    { url: "https://raw.githubusercontent.com/SDS-Junior-Reviewer-2026-Second/ptest_Heejoo/main/README.md", label: " (GitHub raw)" }
+  ];
+
+  function applyReadme(md, label) {
+    var facts = parseFacts(md);
+    var guests = parseGuests(md);
+    /* 표도 목록도 못 찾았으면 README가 아니다(404 페이지 등) → 다음 소스로 */
+    if (!guests.length && !facts.length) throw new Error("README 형식이 아님");
+
+    if (facts.length) {
+      FACTS.length = 0;
+      Array.prototype.push.apply(FACTS, facts);
+      if (factList.childElementCount) fillFactList();
+    }
+    if (guests.length) {
+      SEED.length = 0;
+      Array.prototype.push.apply(SEED, guests);
+      renderNotes();
+    }
+    var src = $("guestSrc");
+    if (src) {
+      src.textContent = "README의 「다녀간 사람들」 " + guests.length + "명을 그대로 불러왔습니다 · 사실 "
+        + FACTS.length + "개" + label;
+    }
+  }
+
+  function loadReadme(i) {
+    if (i >= README_SOURCES.length) {
       var src = $("guestSrc");
-      if (src) src.textContent = "README의 「다녀간 사람들」 " + guests.length + "명을 그대로 불러왔습니다 · 사실 " + FACTS.length + "개";
-    })
-    .catch(function () {
-      var src = $("guestSrc");
-      if (src) src.textContent = "README를 읽지 못해 저장된 목록을 보여주는 중입니다 (파일을 직접 열면 생기는 현상)";
-    });
+      if (src) src.textContent = "README를 읽지 못해 저장된 목록을 보여주는 중입니다";
+      return;
+    }
+    fetch(README_SOURCES[i].url, { cache: "no-cache" })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(function (md) { applyReadme(md, README_SOURCES[i].label); })
+      .catch(function () { loadReadme(i + 1); });
+  }
+  loadReadme(0);
 
   /* 첫 화면에 사실 하나 미리 깔아두기 */
   rollFact();
