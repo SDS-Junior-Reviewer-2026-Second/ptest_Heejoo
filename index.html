@@ -560,6 +560,7 @@ footer p{margin:6px 0;color:var(--plum-2)}
         내가 남긴 메모는 ✕ 로 지울 수 있어요 ·
         <a href="https://github.com/SDS-Junior-Reviewer-2026-Second/ptest_Heejoo" target="_blank" rel="noopener">README에 영구 기록하기 →</a>
       </p>
+      <p class="mini" id="guestSrc">README를 불러오는 중…</p>
     </div>
   </section>
 
@@ -735,7 +736,14 @@ footer p{margin:6px 0;color:var(--plum-2)}
     "정희주가 태어났을 때 울지 않았다. 의사가 울었다.",
     "정희주가 세상을 살아가는 것이 아니다. 세상이 정희주를 경험하고 있는 것이다.",
     "정희주가 어릴 때 무서운 꿈을 꾸면 괴물이 부모님 방으로 도망갔다.",
-    "산타클로스는 정희주에게 선물을 받아 온세상 아이들에게 뿌린다."
+    "산타클로스는 정희주에게 선물을 받아 온세상 아이들에게 뿌린다.",
+    "정희주가 우연치 않게 불 타죽은 공룡을 맛본 뒤로 지구에서 공룡을 볼 수 없게됐다.",
+    "닐 암스트롱이 달에 발자국을 못 찍었다 하니, 정희주가 신발만 챙겨서 갔다 왔다.",
+    "그레이엄 벨이 마침내 전화기를 발명했을때 정희주로부터 부재중전화가 2통 와있었다.",
+    "라이트 형제가 비행기를 발명한 게 아니다. 정희주가 중력에게 잠깐 쉬라고 했다.",
+    "인류가 불을 발견한 것이 아니다. 정희주가 추워서 불에게 나오라고 했다.",
+    "공룡은 운석 때문에 멸종한 것이 아니다. 정희주가 조용히 좀 하라고 했다.",
+    "박지훈과 정희주가 대화를 하니 우주가 생겨났다. 그 뒤로 둘은 얘기하지 않는다."
   ];
   var factCard = $("factCard"), factText = $("factText"), factNo = $("factNo"), lastFact = -1;
 
@@ -764,6 +772,14 @@ footer p{margin:6px 0;color:var(--plum-2)}
   });
 
   var factList = $("factList"), listOpen = false;
+  function fillFactList() {
+    factList.innerHTML = "";
+    FACTS.forEach(function (f) {
+      var li = document.createElement("li");
+      li.textContent = f;
+      factList.appendChild(li);
+    });
+  }
   $("factAll").addEventListener("click", function () {
     if (!factList.childElementCount) {
       FACTS.forEach(function (f) {
@@ -904,9 +920,12 @@ footer p{margin:6px 0;color:var(--plum-2)}
   });
 
   /* ── 방명록 ───────────────────────────────────────── */
+  /* README의 「다녀간 사람들」 표를 불러오지 못했을 때 쓰는 폴백 */
   var SEED = [
+    { name: "지훈", msg: "소녀, 훌륭한. 그러나 아직 멀었음.", seed: true },
     { name: "지윤", msg: "레포가 핫해서 놀러왔어요 히쮸홧팅홧딩", seed: true },
     { name: "강현", msg: "재밌는 내용 많네요 잘 보고 갑니다~", seed: true },
+    { name: "혜연", msg: "이런 잼컨에 나를 빼놓을 수 없지", seed: true },
     { name: "희주", msg: "내가 죽거든 이 글들을 묘비에 새겨주세요", seed: true }
   ];
   var NOTE_COLORS = ["#FFE0EC", "#E7DEFF", "#D8F5E9", "#FFF0C9", "#DCEBFF", "#FFE2D5"];
@@ -966,6 +985,72 @@ footer p{margin:6px 0;color:var(--plum-2)}
     rain(["💗", "✨", "🐟", "🌸"], 12);
     toast("🙌 " + name + "님, 다녀가셨습니다!");
   });
+
+  /* ── README.md 동기화 ─────────────────────────────────
+     같은 폴더의 README.md를 읽어 「정희주에 관한 사실」과
+     「다녀간 사람들」 표를 그대로 반영한다. 표에 한 줄 추가하면
+     페이지가 따라온다. 못 읽으면(file:// 등) 위의 폴백을 쓴다. */
+  function sectionOf(md, heading) {
+    var lines = md.split(/\r?\n/), out = [], on = false;
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      if (/^#{1,6}\s/.test(line)) {
+        if (on) break;
+        on = line.indexOf(heading) !== -1;
+        continue;
+      }
+      if (on) out.push(line);
+    }
+    return out;
+  }
+
+  function parseFacts(md) {
+    return sectionOf(md, "정희주에 관한 사실")
+      .map(function (l) {
+        var m = l.match(/^\s*\d+\.\s+(.*\S)\s*$/);
+        return m ? m[1].replace(/\*\*/g, "") : null;
+      })
+      .filter(Boolean);
+  }
+
+  function parseGuests(md) {
+    return sectionOf(md, "다녀간 사람들")
+      .filter(function (l) { return /^\s*\|/.test(l); })
+      .map(function (l) {
+        return l.trim().replace(/^\||\|$/g, "").split("|").map(function (c) { return c.trim(); });
+      })
+      .filter(function (c) {
+        return c.length >= 2 && c[0] && c[1] &&
+               !/^-{2,}$/.test(c[0].replace(/[\s:]/g, "")) &&
+               !(c[0] === "이름" && c[1] === "한마디");
+      })
+      .map(function (c) {
+        return { name: c[0].replace(/\*\*/g, ""), msg: c[1].replace(/\*\*/g, ""), seed: true };
+      });
+  }
+
+  fetch("README.md", { cache: "no-cache" })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(function (md) {
+      var facts = parseFacts(md);
+      if (facts.length) {
+        FACTS.length = 0;
+        Array.prototype.push.apply(FACTS, facts);
+        if (factList.childElementCount) fillFactList();
+      }
+      var guests = parseGuests(md);
+      if (guests.length) {
+        SEED.length = 0;
+        Array.prototype.push.apply(SEED, guests);
+        renderNotes();
+      }
+      var src = $("guestSrc");
+      if (src) src.textContent = "README의 「다녀간 사람들」 " + guests.length + "명을 그대로 불러왔습니다 · 사실 " + FACTS.length + "개";
+    })
+    .catch(function () {
+      var src = $("guestSrc");
+      if (src) src.textContent = "README를 읽지 못해 저장된 목록을 보여주는 중입니다 (파일을 직접 열면 생기는 현상)";
+    });
 
   /* 첫 화면에 사실 하나 미리 깔아두기 */
   rollFact();
